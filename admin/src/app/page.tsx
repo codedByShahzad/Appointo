@@ -12,18 +12,16 @@ export default function AdminHome() {
   const adminContext = useContext(AdminContext);
 
   if (!adminContext) return null;
-  
+
   const { atoken } = adminContext;
 
   return (
     <>
       {atoken ? (
-        <div className="bg-[#F8FCFD]">
           <div>
             <Admin/>
             <Doctor />
           </div>
-        </div>
       ) : (
         <LoginPage />
       )}

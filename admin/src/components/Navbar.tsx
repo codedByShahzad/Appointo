@@ -23,7 +23,7 @@ const Navbar = () => {
 
   return (
     <div className="w-full bg-white shadow-sm">
-      <div className="max-w-[1500px] mx-auto flex items-center justify-between py-2 px-6">
+      <div className="mx-auto flex items-center justify-between py-2 px-6">
         {/* LEFT SECTION */}
         <div className="flex items-center gap-3">
           <Image
