@@ -67,7 +67,7 @@ const AdminLogin: React.FC = () => {
         localStorage.setItem("atoken", data.token);
         console.log(data.token)
         setAtoken(data.token);
-        router.push("/dashboard")
+        router.push("/")
       } else {
         toast.error(data.message || "Invalid credentials");
       }
