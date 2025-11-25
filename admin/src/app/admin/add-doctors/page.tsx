@@ -24,15 +24,13 @@ const Page = () => {
     image: null as File | null,
   });
 
-  const adminContext = useContext(AdminContext);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false); // 👈 loader state
 
-  if (!adminContext) {
-    return null;
-  }
+  const adminContext = useContext(AdminContext);
+  if (!adminContext) return null;
 
   const { backend_url, atoken } = adminContext;
-
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const handleChange = (
     e:
@@ -51,7 +49,7 @@ const Page = () => {
       if (file) {
         setFormData((prev) => ({
           ...prev,
-          image: file, // 👈 always update "image" key
+          image: file,
         }));
 
         const previewUrl = URL.createObjectURL(file);
@@ -80,50 +78,72 @@ const Page = () => {
   };
 
   // ---------------------- SUBMIT FUNCTION ----------------------
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (loading) return; // avoid double submit
 
-  if (!formData.name || !formData.email) {
-    toast.error("Please fill all required fields.");
-    return;
-  }
-
-  const payload = new FormData();
-  payload.append("name", formData.name);
-  payload.append("email", formData.email);
-  payload.append("password", formData.password);
-  payload.append("speciality", formData.speciality);
-  payload.append("experience", formData.experience);
-  payload.append("degree", formData.education);
-  payload.append("fee", formData.fees);
-  payload.append("about", formData.about);
-  payload.append("available", "true");
-  payload.append("date", Date.now().toString());
-  payload.append("address", JSON.stringify(formData.address));
-  if (formData.image) payload.append("image", formData.image);
-
-  try {
-    const { data } = await axios.post(
-      `${backend_url}/api/admin/add-doctor`,
-      payload,
-      {
-        headers: {
-          atoken,          // ✅ let axios handle Content-Type
-        },
-      }
-    );
-
-    if (data.success) {
-      toast.success(data.message || "Doctor Added");
-    } else {
-      toast.error(data.message || "Something went wrong");
+    if (!formData.name || !formData.email) {
+      toast.error("Please fill all required fields.");
+      return;
     }
-  } catch (error: any) {
-    console.error("ADD DOCTOR ERROR:", error?.response?.data || error);
-    toast.error(error?.response?.data?.message || "Bad Request from server");
-  }
-};
 
+    const payload = new FormData();
+    payload.append("name", formData.name);
+    payload.append("email", formData.email);
+    payload.append("password", formData.password);
+    payload.append("speciality", formData.speciality);
+    payload.append("experience", formData.experience);
+    payload.append("degree", formData.education);
+    payload.append("fee", formData.fees);
+    payload.append("about", formData.about);
+    payload.append("available", "true");
+    payload.append("date", Date.now().toString());
+    payload.append("address", JSON.stringify(formData.address));
+    if (formData.image) payload.append("image", formData.image);
+
+    try {
+      setLoading(true); // 🔵 start loader
+
+      const { data } = await axios.post(
+        `${backend_url}/api/admin/add-doctor`,
+        payload,
+        {
+          headers: {
+            atoken, // axios will set multipart boundary
+          },
+        }
+      );
+
+      if (data.success) {
+        toast.success(data.message || "Doctor Added");
+
+        // ✅ Reset form and preview after success
+        // setFormData({
+        //   name: "",
+        //   email: "",
+        //   password: "",
+        //   experience: "",
+        //   fees: "",
+        //   speciality: "",
+        //   education: "",
+        //   address: {
+        //     line1: "",
+        //     line2: "",
+        //   },
+        //   about: "",
+        //   image: null,
+        // });
+        // setImagePreview(null);
+      } else {
+        toast.error(data.message || "Something went wrong");
+      }
+    } catch (error: any) {
+      console.error("ADD DOCTOR ERROR:", error?.response?.data || error);
+      toast.error(error?.response?.data?.message || "Bad Request from server");
+    } finally {
+      setLoading(false); // 🔵 stop loader
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#F6F7FB] px-6 py-8">
@@ -264,6 +284,7 @@ const Page = () => {
                     <option>Dermatologist</option>
                     <option>Neurologist</option>
                     <option>Pediatrician</option>
+                    <option>Gynecologist</option>
                   </select>
                 </div>
 
@@ -325,9 +346,14 @@ const Page = () => {
           <div className="mt-8">
             <button
               type="submit"
-              className="bg-[#596CFF] text-white px-8 py-2 rounded-full text-sm font-medium shadow-sm hover:opacity-90 transition"
+              disabled={loading}
+              className={`bg-[#596CFF] text-white px-8 py-2 rounded-full text-sm font-medium shadow-sm transition flex items-center justify-center gap-2
+              ${loading ? "opacity-70 cursor-not-allowed" : "hover:opacity-90"}`}
             >
-              Add doctor
+              {loading ? "Adding doctor" : "Add doctor"}
+              {loading && (
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              )}
             </button>
           </div>
         </div>
