@@ -9,7 +9,7 @@ const Page = () => {
 
   if (!admin) return <div>Context not found!</div>;
 
-  const { doctors, getAllDoctors, atoken } = admin;
+  const { doctors, getAllDoctors, atoken, changeAvailability } = admin;
 
   useEffect(() => {
     if (atoken) getAllDoctors();
@@ -47,6 +47,7 @@ const Page = () => {
                   type="checkbox"
                   defaultChecked={item.available}
                   className="w-4 h-4 rounded border-gray-400"
+                  onChange={()=>{changeAvailability(item._id)}}
                 />
                 <span className="text-sm text-gray-600">Available</span>
               </div>
