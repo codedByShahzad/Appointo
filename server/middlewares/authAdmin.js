@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken"
 
 // Admin Authentication Middleware
 
-export const autAdmin = async(req, res, next) =>{
+export const authAdmin = async(req, res, next) =>{
     try{
         const {atoken} = req.headers
         if(!atoken){

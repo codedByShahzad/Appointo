@@ -19,10 +19,9 @@ const Sidebar = () => {
     <div
       className="
         bg-white 
-        border-b md:border-r
+        border-b md:border-0 md:border-r
         border-[#BEBEBE] 
         w-full md:w-64 
-        md:h-screen 
         shrink-0
         md:pt-6 pt-2
       "

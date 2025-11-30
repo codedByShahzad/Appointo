@@ -146,7 +146,7 @@ const Page = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F6F7FB] px-6 py-8">
+    <div className="min-h-screen bg-[#F6F7FB] p-4">
       <h1 className="text-xl font-semibold text-gray-900 mb-6">Add Doctor</h1>
 
       <form onSubmit={handleSubmit}>

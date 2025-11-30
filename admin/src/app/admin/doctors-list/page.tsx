@@ -9,26 +9,26 @@ const Page = () => {
 
   if (!admin) return <div>Context not found!</div>;
 
-  const { doctors, getAllDoctors, atoken } = admin;
+  const { doctors, getAllDoctors, atoken, changeAvailability } = admin;
 
   useEffect(() => {
     if (atoken) getAllDoctors();
   }, [atoken]);
 
   return (
-    <div className="p-10 bg-[#f7f8fc] min-h-screen">
+    <div className="p-4 bg-[#f7f8fc] min-h-screen">
       {/* Title */}
       <h1 className="text-2xl font-semibold mb-6">All Doctors</h1>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {doctors?.map((item, index) => (
           <div
             key={index}
             className="bg-white rounded-xl overflow-hidden shadow-md border border-gray-200 group"
           >
             {/* Image */}
-            <div className="relative w-full h-64 bg-[#eef2ff] group-hover:bg-primary transition-colors duration-300">
+            <div className="relative w-full h-70 md:h-54 bg-[#eef2ff] group-hover:bg-primary transition-colors duration-300">
               <Image
                 src={item.image}
                 alt={item.name}
@@ -47,6 +47,7 @@ const Page = () => {
                   type="checkbox"
                   defaultChecked={item.available}
                   className="w-4 h-4 rounded border-gray-400"
+                  onChange={()=>{changeAvailability(item._id)}}
                 />
                 <span className="text-sm text-gray-600">Available</span>
               </div>
