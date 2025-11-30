@@ -17,13 +17,14 @@ const Navbar = () => {
 
   const handleLogout = () => {
     setAtoken("");
-    localStorage.removeItem("atoken"); // 👈 use the key name
+    localStorage.removeItem("atoken");
     router.push("/");
   };
 
   return (
     <div className="w-full bg-white shadow-sm">
-      <div className="mx-auto flex items-center justify-between py-2 px-6">
+      <div className="mx-auto flex flex-col sm:flex-row items-center justify-between py-3 px-4 sm:px-6 gap-3 sm:gap-0">
+
         {/* LEFT SECTION */}
         <div className="flex items-center gap-3">
           <Image
@@ -31,10 +32,10 @@ const Navbar = () => {
             alt="Admin Logo"
             width={144}
             height={40}
-            className="w-36 sm:w-40 cursor-pointer"
+            className="w-28 sm:w-36 md:w-40 cursor-pointer"
           />
 
-          <span className="ml-4 text-sm border border-gray-500 rounded-full px-5 py-0.5 text-gray-700">
+          <span className="text-xs sm:text-sm border border-gray-500 rounded-full px-4 sm:px-5 py-0.5 text-gray-700">
             {atoken ? "Admin" : "Doctor"}
           </span>
         </div>
@@ -42,11 +43,12 @@ const Navbar = () => {
         {/* RIGHT SECTION */}
         <button
           onClick={handleLogout}
-          className="bg-primary text-white flex items-center justify-center gap-2 rounded-full py-2 px-12 font-medium text-sm md:text-base 
-         transition-all duration-200 shadow-sm active:scale-[0.97]"
+          className="bg-primary text-white rounded-full py-2 px-8 sm:px-12 text-sm sm:text-base font-medium 
+          transition-all duration-200 shadow-sm active:scale-95 w-full sm:w-auto"
         >
           {atoken ? "Logout" : "Login"}
         </button>
+
       </div>
     </div>
   );
