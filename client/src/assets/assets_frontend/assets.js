@@ -71,7 +71,7 @@ export const specialityData = [
     image: Dermatologist,
   },
   {
-    speciality: "Pediatricians",
+    speciality: "Pediatrician",   // 👈 singular, matches DB
     image: Pediatricians,
   },
   {
@@ -83,6 +83,7 @@ export const specialityData = [
     image: Gastroenterologist,
   },
 ];
+
 
 export const doctors = [
   {

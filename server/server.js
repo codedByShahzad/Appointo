@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import { connectDb } from './config/mongoDB.js';
 import connectCloudinary from './config/cloudnairy.js';
 import adminRouter from './routes/adminRoute.js';
+import doctorRouter from './routes/doctorRoute.js';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.get("/",(req, res)=>{
 })
 
 app.use("/api/admin", adminRouter)
+app.use("/api/doctor", doctorRouter)
 
 app.listen(port, ()=>{
     console.log(`Server is Running on Port ${port}`)

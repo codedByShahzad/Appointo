@@ -16,41 +16,84 @@ const Page = () => {
   }, [atoken]);
 
   return (
-    <div className="p-4 bg-[#f7f8fc] min-h-screen">
-      {/* Title */}
-      <h1 className="text-2xl font-semibold mb-6">All Doctors</h1>
+    <div className="p-6 bg-[#f7f8fc] min-h-screen">
+      <h1 className="text-3xl font-semibold mb-6">All Doctors</h1>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {doctors?.map((item, index) => (
+      {/* FLEX WRAP CONTAINER */}
+      <div className="flex flex-wrap gap-6">
+        {doctors?.map((item) => (
           <div
-            key={index}
-            className="bg-white rounded-xl overflow-hidden shadow-md border border-gray-200 group"
+            key={item._id}
+            className="
+              bg-white 
+              border border-blue-200
+              rounded-xl 
+              overflow-hidden 
+              shadow-sm 
+              w-[280px]
+            "
           >
-            {/* Image */}
-            <div className="relative w-full h-70 md:h-54 bg-[#eef2ff] group-hover:bg-primary transition-colors duration-300">
+            {/* IMAGE */}
+            <div className="bg-[#eef2ff] flex justify-center items-center">
               <Image
                 src={item.image}
                 alt={item.name}
-                fill
-                className="object-cover transition-transform duration-300"
+                width={280}
+                height={190}
+                className="object-contain bg-blue-50"
               />
             </div>
 
-            {/* Info */}
-            <div className="p-4 space-y-2">
-              <p className="text-lg font-semibold text-gray-900">{item.name}</p>
-              <p className="text-sm text-gray-500">{item.speciality}</p>
+            {/* CONTENT */}
+            <div className="p-4">
+              {/* Custom Radio-Like Toggle */}
+              <div
+                className="mb-3 flex items-center gap-2 cursor-pointer select-none"
+                onClick={() => changeAvailability(item._id)}
+              >
+                {/* Outer circle (border) */}
+                <div
+                  className={`
+                    w-5 h-5 rounded-full flex items-center justify-center
+                    border-2
+                    transition-colors duration-200
+                    ${item.available ? "border-green-500" : "border-red-500"}
+                  `}
+                >
+                  {/* Inner dot with scale + fade animation */}
+                  <div
+                    className={`
+                      w-2.5 h-2.5 rounded-full
+                      transition-all duration-200 ease-out
+                      ${item.available
+                        ? "bg-green-500 scale-100 opacity-100"
+                        : "bg-red-500 scale-90 opacity-80"
+                      }
+                    `}
+                  />
+                </div>
 
-              <div className="flex items-center gap-2 mt-3">
-                <input
-                  type="checkbox"
-                  defaultChecked={item.available}
-                  className="w-4 h-4 rounded border-gray-400"
-                  onChange={()=>{changeAvailability(item._id)}}
-                />
-                <span className="text-sm text-gray-600">Available</span>
+                {/* Text */}
+                <span
+                  className={`
+                    text-sm font-medium
+                    transition-colors duration-200
+                    ${item.available ? "text-green-600" : "text-red-600"}
+                  `}
+                >
+                  {item.available ? "Available" : "Not Available"}
+                </span>
               </div>
+
+              {/* NAME */}
+              <p className="text-gray-900 text-lg font-semibold leading-tight">
+                {item.name}
+              </p>
+
+              {/* SPECIALITY */}
+              <p className="text-gray-600 text-sm mt-1">
+                {item.speciality}
+              </p>
             </div>
           </div>
         ))}
