@@ -285,6 +285,7 @@ const Page = () => {
                     <option>Neurologist</option>
                     <option>Pediatrician</option>
                     <option>Gynecologist</option>
+                    <option>Gastroenterologist</option>
                   </select>
                 </div>
 
