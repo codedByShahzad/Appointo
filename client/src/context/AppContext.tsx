@@ -5,6 +5,8 @@ import React, {
   ReactNode,
   useEffect,
   useState,
+  Dispatch,
+  SetStateAction
 } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -29,6 +31,8 @@ export interface Doctor {
 interface AppContextType {
   doctors: Doctor[];
   backend_url: string | undefined;
+  token : string,
+  setToken: Dispatch<SetStateAction<string>>; // ✅ Correct type
 }
 
 export const AppContext = createContext<AppContextType | null>(null);
@@ -36,6 +40,8 @@ export const AppContext = createContext<AppContextType | null>(null);
 const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const backend_url = process.env.NEXT_PUBLIC_BACKEND_URL;
   const [doctors, setDoctors] = useState<Doctor[]>([]);
+
+  const [token, setToken] = useState('')
 
   const getDoctorsData = async () => {
     try {
@@ -64,7 +70,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
   }, [backend_url]);
 
   return (
-    <AppContext.Provider value={{ doctors, backend_url }}>
+    <AppContext.Provider value={{ doctors, backend_url, token, setToken}}>
       {children}
     </AppContext.Provider>
   );

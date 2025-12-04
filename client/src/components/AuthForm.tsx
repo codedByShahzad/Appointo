@@ -59,20 +59,25 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
     if (!validateForm()) return;
     setLoading(true);
 
-    setTimeout(() => {
-      console.log(`${mode} successful ✅`, {
-        name,
-        email,
-        password,
-        confirmPassword,
-      });
-      setLoading(false);
-      setName("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      setErrors({});
-    }, 1000);
+    // setTimeout(() => {
+    //   console.log(`${mode} successful ✅`, {
+    //     name,
+    //     email,
+    //     password,
+    //     confirmPassword,
+    //   });
+    //   setLoading(false);
+    //   setName("");
+    //   setEmail("");
+    //   setPassword("");
+    //   setConfirmPassword("");
+    //   setErrors({});
+    // }, 1000);
+
+    if(mode == 'Sign Up'){
+      
+    }
+
   };
 
   return (
