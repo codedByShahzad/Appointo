@@ -43,4 +43,32 @@ const registerUser = async(req, res) =>{
     }
 }
 
-export {registerUser}
+const LoginUser = async(req,res)=>{
+try{
+
+    const {email, password} = req.body
+
+    const user = await User.findOne({email})
+
+    if(!user){
+        return res.json({success: false, message: "User Not Found"})
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password)
+
+    if(isMatch){
+        const token = jwt.sign({id:user._id}, process.env.JWT_SECRET)
+        res.json({success: true, token})
+    } else{
+        return res.json({success: false, message: "Invalid Credantials"})
+    }
+
+} catch (error) {
+        console.log(error)
+        res.json({success: false, message: error})
+    }
+    
+
+}
+
+export {registerUser, LoginUser}
