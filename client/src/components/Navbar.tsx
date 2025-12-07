@@ -1,16 +1,19 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { assets } from "../assets/assets_frontend/assets";
 import { HiMenu, HiX } from "react-icons/hi";
 import Button from "../components/Button";
+import { AppContext } from "@/context/AppContext";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const [token, setToken] = useState<boolean>(false);
+  const appContext = useContext(AppContext)
+  if(!appContext) return null
+  const {token, setToken} = appContext
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -24,12 +27,12 @@ const Navbar: React.FC = () => {
 
   const handleSignup = (): void => {
     router.push("/signup");
-    setToken(true);
   };
 
   const handleLogout = (): void => {
     router.push("/");
-    setToken(false);
+    setToken("");
+    localStorage.removeItem('token')
     setIsDropdownOpen(false);
     setIsMenuOpen(false);
   };
@@ -56,6 +59,12 @@ const Navbar: React.FC = () => {
       setIsDropdownOpen(false);
     }, 150);
   };
+
+  useEffect(()=>{
+    if(token){
+      router.push("/")
+    }
+  },[token])
 
   return (
     <nav className="flex justify-between items-center border-b border-gray-300 py-3 px-2 lg:px-16 xl:px-28 bg-white shadow-sm sticky top-0 z-50">

@@ -1,6 +1,9 @@
 "use client";
+import { AppContext } from "../context/AppContext";
 import Link from "next/link";
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useContext } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 interface AuthFormProps {
   mode: "Login" | "Sign Up";
@@ -11,6 +14,15 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  const appContext = useContext(AppContext);
+
+  if (!appContext) {
+    // Optional: you can render null or throw an error
+    return null;
+  }
+
+  const { backend_url, token, setToken } = appContext;
 
   const [errors, setErrors] = useState<{
     name?: string;
@@ -53,7 +65,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validateForm()) return;
@@ -74,10 +86,34 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
     //   setErrors({});
     // }, 1000);
 
+    try{
     if(mode == 'Sign Up'){
-      
-    }
+        const {data} = await axios.post(`${backend_url}/api/user/register`, {name, email, password})
+        if(data.success){
+          localStorage.setItem("token", data.token)
+          setToken(data.token)
+          toast.success("Registration Completed Successfully")
+        } else{
+          toast.error(data.message)
+        }
+      } else{
+         const {data} = await axios.post(`${backend_url}/api/user/login`, {email, password})
+        if(data.success){
+          localStorage.setItem("token", data.token)
+          setToken(data.token)
+          toast.success("Login successful");
 
+        } else{
+          toast.error(data.message)
+        }
+      }
+
+    } catch (error : any){
+      toast.error(error.message)
+    } finally {
+      setLoading(false)
+    }
+      
   };
 
   return (
