@@ -31,9 +31,10 @@ export interface Doctor {
 interface AppContextType {
   doctors: Doctor[];
   backend_url: string | undefined;
-  token : string,
-  setToken: Dispatch<SetStateAction<string>>; // ✅ Correct type
+  token: string | null;
+  setToken: Dispatch<SetStateAction<string | null>>;
 }
+
 
 export const AppContext = createContext<AppContextType | null>(null);
 
@@ -41,7 +42,16 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const backend_url = process.env.NEXT_PUBLIC_BACKEND_URL;
   const [doctors, setDoctors] = useState<Doctor[]>([]);
 
-  const [token, setToken] = useState('')
+  const [token, setToken] = useState<string | null>(null); // ⬅ SSR-safe initial value
+
+  // Load token AFTER mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
 
   const getDoctorsData = async () => {
     try {
