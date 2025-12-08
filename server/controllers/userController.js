@@ -71,4 +71,21 @@ try{
 
 }
 
-export {registerUser, LoginUser}
+const getUserProfile = async (req, res) => {
+    try {
+        const userId = req.userId; // get userId from auth middleware
+        if (!userId) {
+            return res.status(401).json({ success: false, message: "Not Authorized" });
+        }
+
+        const userData = await User.findById(userId).select('-password');
+        res.json({ success: true, userData });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+
+export {registerUser, LoginUser, getUserProfile}
